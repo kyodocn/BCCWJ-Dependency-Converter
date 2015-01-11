@@ -173,7 +173,6 @@ class Clause(object):
         self.dep_target_index = dep_target_index
         self.content_word_offset = self.__examine_content_word_offset(word_lines)
 
-
     def __extract_dep_info(self, info_line):
         match = self.DepPattern.search(info_line)
         if not match:
@@ -314,6 +313,7 @@ def convert_dir(source_dir, target_dir, env):
                      target_dir + "/" + file_name,
                      env)
 
+
 def convert_file(source_path, target_path, env):
     sentences = read_corpus(source_path)
 
@@ -379,6 +379,7 @@ def read_corpus(source_path):
             else:
                 sentence_lines.append(line)
         return sentences
+
 
 def dump_sentences(sentences, target_path):
     with open(target_path, "w") as f:
