@@ -72,20 +72,6 @@ class CdSentence(object):
         return False
 
     def is_projective(self):
-        stack = [0]
-        for i, target in enumerate(self.dep_table[:-1]):
-            pre_target = stack[-1]
-            if i == pre_target:
-                while len(stack) >= 1 and stack[-1] == i:
-                    stack.pop()
-                stack.append(target)
-            else:
-                if target > pre_target:
-                    return False
-                stack.append(target)
-        return True
-
-    def is_projective(self):
         undirected_dep_table = self.__create_undirected_dep_table()
         stack = [0]
         for i, targets in enumerate(undirected_dep_table):
@@ -258,7 +244,6 @@ def init_settings():
         action="store",
         type="str",
         dest="source"
-        #required=True
     )
 
     parser.add_option(
@@ -266,7 +251,6 @@ def init_settings():
         action="store",
         type="str",
         dest="target"
-        #required=True
     )
 
     parser.add_option(
@@ -276,7 +260,6 @@ def init_settings():
         choices=["dl", "ch", "kp"],
         default="ch"
     )
-    #parse.set_default(dummy="ch")
 
     parser.add_option(
         "--reverse",
