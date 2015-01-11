@@ -48,9 +48,12 @@ class CdSentence(object):
 
     def __construct_dep_table(self, clauses):
         dep_table = []
+        c_n = len(clauses)
         for i, clause in enumerate(clauses):
             if i != clause.clause_index:
                 raise RuntimeError("clause index is invalid")
+            elif clause.dep_target_index >= c_n:
+                raise RuntimeError("dependency target is over last clause")
             dep_table.append(clause.dep_target_index)
         return dep_table
 
