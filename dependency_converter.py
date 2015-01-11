@@ -48,9 +48,12 @@ class CdSentence(object):
 
     def __construct_dep_table(self, clauses):
         dep_table = []
+        c_n = len(clauses)
         for i, clause in enumerate(clauses):
             if i != clause.clause_index:
                 raise RuntimeError("clause index is invalid")
+            elif clause.dep_target_index >= c_n:
+                raise RuntimeError("dependency target is over last clause")
             dep_table.append(clause.dep_target_index)
         return dep_table
 
@@ -70,20 +73,6 @@ class CdSentence(object):
             if target != -1 and i >= target:
                 return True
         return False
-
-    def is_projective(self):
-        stack = [0]
-        for i, target in enumerate(self.dep_table[:-1]):
-            pre_target = stack[-1]
-            if i == pre_target:
-                while len(stack) >= 1 and stack[-1] == i:
-                    stack.pop()
-                stack.append(target)
-            else:
-                if target > pre_target:
-                    return False
-                stack.append(target)
-        return True
 
     def is_projective(self):
         undirected_dep_table = self.__create_undirected_dep_table()
@@ -187,7 +176,6 @@ class Clause(object):
         self.dep_target_index = dep_target_index
         self.content_word_offset = self.__examine_content_word_offset(word_lines)
 
-
     def __extract_dep_info(self, info_line):
         match = self.DepPattern.search(info_line)
         if not match:
@@ -258,7 +246,6 @@ def init_settings():
         action="store",
         type="str",
         dest="source"
-        #required=True
     )
 
     parser.add_option(
@@ -266,7 +253,6 @@ def init_settings():
         action="store",
         type="str",
         dest="target"
-        #required=True
     )
 
     parser.add_option(
@@ -276,7 +262,6 @@ def init_settings():
         choices=["dl", "ch", "kp"],
         default="ch"
     )
-    #parse.set_default(dummy="ch")
 
     parser.add_option(
         "--reverse",
@@ -330,6 +315,7 @@ def convert_dir(source_dir, target_dir, env):
         convert_file(source_dir + "/" + file_name,
                      target_dir + "/" + file_name,
                      env)
+
 
 def convert_file(source_path, target_path, env):
     sentences = read_corpus(source_path)
@@ -396,6 +382,7 @@ def read_corpus(source_path):
             else:
                 sentence_lines.append(line)
         return sentences
+
 
 def dump_sentences(sentences, target_path):
     with open(target_path, "w") as f:
