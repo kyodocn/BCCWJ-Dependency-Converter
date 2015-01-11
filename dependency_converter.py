@@ -66,7 +66,9 @@ class CdSentence(object):
     def fix_dummy_dependent(self):
         for i, target in enumerate(self.dep_table[:-1]):
             if target == -1:
-                self.dep_table[i] = len(self.dep_table) - 1
+                new_target = len(self.dep_table) - 1
+                self.dep_table[i]                = new_target
+                self.clauses[i].dep_target_index = new_target
 
     def has_reverse_dependent(self):
         for i, target in enumerate(self.dep_table):
@@ -122,6 +124,7 @@ class CdSentence(object):
                 dep_target_index = dep_target_clause.begin_index + dep_target_clause.content_word_offset
             dep_target_indexes.append(dep_target_index)
             is_end_of_clause_chars.append(u"E")
+            current_index += 1
 
         return WdSentence(word_lines, dep_target_indexes, is_end_of_clause_chars,
                           self.file_name, self.sentence_index)
