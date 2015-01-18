@@ -9,7 +9,7 @@ from optparse import OptionParser
 
 
 ContentPOS = [
-    u"URL",  u"代名詞", u"副詞",   u"助動詞", u"動詞",
+    u"URL",  u"代名詞", u"副詞", u"動詞",
     u"名詞", u"形容詞", u"形状詞", u"接尾辞", u"英単語"
 ]
 
